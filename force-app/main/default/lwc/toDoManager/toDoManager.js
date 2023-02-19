@@ -1,9 +1,10 @@
-import { LightningElement } from 'lwc';
+import { LightningElement, track } from 'lwc';
 
 export default class ToDoManager extends LightningElement {
 
     time = "5:35 PM";
     greetings = "Good Day";
+    @track todo = [];
 
     connectedCallback(){
         // lifecycle methods are part of LWC framework and gets automatically invoked by the framework itself
@@ -46,5 +47,18 @@ export default class ToDoManager extends LightningElement {
         else{
             this.greetings = "Good Evening";
         }
+    }
+
+    addtohandler(){
+        const inputBox = this.template.querySelector("lightning-input");
+        const mytodo = {
+            todoId : this.todo.length,
+            todoName : inputBox.value,
+            done : false,
+            todoDate : new Date()
+
+        };
+        this.todo.push(mytodo);
+        inputBox.value = "";
     }
 }
