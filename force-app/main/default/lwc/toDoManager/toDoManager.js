@@ -1,5 +1,6 @@
 import { LightningElement, track } from 'lwc';
-
+import addTodo from '@salesforce/apex/ToDoControllerClass.addTodo';
+import getCurrentTodos from '@salesforce/apex/ToDoControllerClass.getCurrentTodos';
 export default class ToDoManager extends LightningElement {
 
     time = "5:35 PM";
@@ -9,6 +10,8 @@ export default class ToDoManager extends LightningElement {
     connectedCallback(){
         // lifecycle methods are part of LWC framework and gets automatically invoked by the framework itself
         this.getTime();
+        this.fetchTodo();
+        //this.sampleTodo();
         // setInterval method repeatedly calls a function or executes a code snippet,with a fixed time delay between each call
         setInterval(() =>{
             this.getTime();
@@ -52,13 +55,62 @@ export default class ToDoManager extends LightningElement {
     addtohandler(){
         const inputBox = this.template.querySelector("lightning-input");
         const mytodo = {
-            todoId : this.todo.length,
+            //todoId : this.todo.length,
             todoName : inputBox.value,
             done : false,
-            todoDate : new Date()
+            //todoDate : new Date()
 
         };
-        this.todo.push(mytodo);
+        addTodo({payload : JSON.stringify(mytodo)})
+        .then(response =>{
+            console.log(('Item inserted successfully'));
+            this.fetchTodo();
+        })
+        .catch(error =>{
+            console.error('Error in inserting todo item'+error);
+        });
+        //this.todo.push(mytodo);
         inputBox.value = "";
+    }
+
+    fetchTodo(){
+        getCurrentTodos().then(result =>{
+            if(result){
+                console.log("Retrived todos from server",result.length);
+                this.todo = result;
+            }
+        }).catch(error => {
+            console.error("Error in fetching todo " +error);
+        })
+    }
+    //Get property is also a reactive property and it looks similar to a function and this get property must return a value at the end
+    get upcomingTasks(){
+        return this.todo && this.todo.length ? this.todo.filter(mytodo => !mytodo.done) : [];
+    }
+    get completedTasks(){
+        return this.todo && this.todo.length ? this.todo.filter(mytodo => mytodo.done) : [];
+    }
+    sampleTodo(){
+        const todosList = [
+            {
+                todoId: 0,
+                todoName: "Feed the dog",
+                done: false,
+                todoDate: new Date()
+            },
+            {
+                todoId : 1,
+                todoName : "Feed the cat",
+                done : false,
+                todoDate : new Date()
+            },
+            {
+                todoId : 2,
+                todoName : "Start the bike",
+                done : true,
+                todoDate : new Date()
+            }
+        ];
+        this.todo = todosList;
     }
 }
