@@ -83,6 +83,14 @@ export default class ToDoManager extends LightningElement {
             console.error("Error in fetching todo " +error);
         })
     }
+
+    updatehandler(){
+        this.fetchTodo();
+    }
+
+    deletehandler(){
+        this.fetchTodo();
+    }
     //Get property is also a reactive property and it looks similar to a function and this get property must return a value at the end
     get upcomingTasks(){
         return this.todo && this.todo.length ? this.todo.filter(mytodo => !mytodo.done) : [];
