@@ -1,9 +1,16 @@
 .container{
-    background-color: white;
+    /* background-color: white;
     padding: 16px;
     max-height: 600px;
     overflow-y: scroll;
-    display: black;
+    display: black; */
+    max-width: 480px;
+    width: 100%;
+    padding: 30px;
+    background: whitesmoke;
+    border-radius: 16px;
+    overflow-y: scroll;
+    /* margin: 24px auto; */
 }
 
 .time{
